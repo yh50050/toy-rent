@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="common/starter :: head"></head>
+<body class="hold-transition skin-blue sidebar-mini">
+	<div class="wrapper">
+		<!-- 这种写法，如果top_header中有多个header tag，则都引入进来 -->
+		<!-- <header th:replace="common/top_header :: header"></header> -->
+
+		<header th:replace="common/starter :: header"></header>
+
+		<!-- Content Wrapper. Contains page content -->
+		<div class="content-wrapper">
+			<!-- Content Header (Page header) -->
+			<section class="content-header">
+				<h1>
+					营业额管理 <small>Optional description</small>
+				</h1>
+
+				<button id="point" class="btn">点击</button>
+				<ol class="breadcrumb">
+					<li><a href="#"><i class="fa fa-dashboard"></i> Level</a></li>
+					<li class="active">Here</li>
+				</ol>
+			</section>
+
+			<!-- Main content -->
+			<section class="content container-fluid"></section>
+			<!-- /.content -->
+		</div>
+		<!-- /.content-wrapper -->
+
+
+
+
+		<aside th:replace="common/starter :: aside"></aside>
+		<footer th:replace="common/starter :: footer"></footer>
+		<div class="control-sidebar-bg"></div>
+		<script th:replace="common/starter :: script"></script>
+
+		<script type="text/javascript">
+			$(function() {
+
+				$("#point").click(
+						function() {
+							$.ajax({
+								type : "GET",
+								url : "regist",
+								data : "aaa=sss",
+								dataType : "json",
+								success : function(msg) {
+									alert("Data Saved: " + msg + "---->"
+											+ msg.adminUserName);
+
+								}
+							});
+						});
+			});
+		</script>
+	</div>
+</body>
+
+</html>

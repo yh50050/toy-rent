@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="common/starter :: head">
+
+</head>
+<body class="hold-transition skin-blue sidebar-mini">
+	<div class="wrapper">
+
+		<header th:replace="common/starter :: header"></header>
+
+		<!-- Content Wrapper. Contains page content -->
+		<div class="content-wrapper">
+
+			<!-- Main content -->
+			<!-- Main content -->
+			<section class="content">
+				<div class="row">
+					<div class="col-xs-12">
+						<div class="box">
+							<div class="box-header">
+								<div class="col-md-9">
+									<h3 class="box-title">员工账号</h3>
+								</div>
+								<div class="col-md-3">
+									<div class="input-group">
+										<input type="text" id="key" class="form-control"
+											placeholder="输入员工编号" th:value="${key}" /> <span
+											class="input-group-btn">
+											<button type="submit" name="search" class="btn btn-flat"
+												id="search01">
+												<i class="fa fa-search"></i>
+											</button>
+										</span>
+									</div>
+								</div>
+							</div>
+							<!-- /.box-header -->
+							<div class="box-body">
+								<table id="table01" class="table table-bordered table-hover">
+									<thead>
+										<tr>
+											<th>员工编号</th>
+											<th style="display: none;">密码</th>
+											<th>是否可用</th>
+											<th>操作</th>
+										</tr>
+									</thead>
+									<tbody>
+
+										<tr th:each="account,userStat : ${message.data.content}"
+											th:tabindex="${account.accountId}" th:class="${account.employeeAvailable}==0?'active'">
+											<td th:text="${account.employeeCode}"></td>
+											<td style="display: none;"
+												th:text="${account.empoyeePassword}"></td>
+											<td th:text="${account.employeeAvailable}==1?'可用':'不可用'"></td>
+											<td><a href="javascript:void(0);"
+												th:text="${account.employeeAvailable}==1?'停封':'解封'"
+												th:class="${account.employeeAvailable}==1?'layui-btn layui-btn-danger layui-btn-xs':'layui-btn layui-btn-xs'">停/解封</a></td>
+										</tr>
+
+									</tbody>
+								</table>
+								<nav aria-label="Page navigation">
+									<div class="row">
+										<div class="col-md-10">
+											<ul class="pagination navbar-right" id="page-ul">
+
+											</ul>
+										</div>
+										<div class="col-md-2">
+											<ul class="pagination">
+												<li><input type="text" id="page"
+													style="width: 45px; height: 32px;" /></li>
+												<li th:text=" 共+${message.data.pageCount}+页">共15页</li>
+											</ul>
+										</div>
+									</div>
+								</nav>
+
+							</div>
+							<!-- /.box-body -->
+						</div>
+
+					</div>
+					<!-- /.col -->
+				</div>
+				<!-- /.row -->
+			</section>
+			<!-- /.content -->
+			<!-- /.content -->
+		</div>
+		<!-- /.content-wrapper -->
+
+
+		<aside th:replace="common/starter :: aside"></aside>
+		<footer th:replace="common/starter :: footer"></footer>
+		<div class="control-sidebar-bg"></div>
+		<script th:replace="common/starter :: script"></script>
+
+
+
+		<script th:inline="javascript">
+			/*<![CDATA[*/
+            var baseUrl = window.location.href;
+			    $(function() {
+			    	var start = /*[[${message.data.startPage}]]*/
+			    	var end = /*[[${message.data.endPage}]]*/
+			        var page1 = /*[[${message.data.paging}]]*/
+				    var count = /*[[${message.data.pageCount}]]*/
+				    /** 展示页码 */
+				    function showPaging(){
+						$("#page-ul").append('<li><span id="previous" aria-label="Previous" style="cursor: pointer;"> <span aria-hidden="true">&laquo;</span> </span></li>');
+						while (parseInt(end) >= parseInt(start))
+						{
+							$("#page-ul").append('<li><a href="#" >'+start+'</a></li>');
+							if(start == page1)
+								$("#page-ul li:last-child").addClass("active");
+							start = start + 1;
+						}
+						$("#page-ul").append('<li><span id="next" aria-label="Next" style="cursor: pointer;"> <span aria-hidden="true">&raquo; </span></span></li>');
+					}
+					showPaging();
+					
+					/** 控制页码显示是否访问 */
+					$("#page-ul li a").click(function() {
+						$("#page-ul li").removeClass("active")
+						$(this).addClass("active")
+					})
+					/** 点击页码跳转 */
+					$("#page-ul li a").click(function() {
+						var key = $("#key").val();
+								var page = $(this).html();
+								window.location.href = baseUrl.substring(0, baseUrl
+										.indexOf(""))
+										+ "/employee/accounts?page=" + page + "&key=" + key; 
+							})
+					/** 上一页 */
+					$("#previous").click(function() {
+						var key = $("#key").val();
+								if (page1 > 1){
+									page1 = page1 - 1;
+									window.location.href = baseUrl.substring(0, baseUrl
+											.indexOf(""))
+											+ "/employee/accounts?page=" + page1 + "&key=" + key; 
+								}
+							})
+					/** 下一页 */
+					$("#next").click(function() {
+						
+						var key = $("#key").val();
+							if(parseInt(count) > parseInt(page1)){
+								page1 = page1 + 1;
+								window.location.href = baseUrl.substring(0, baseUrl
+										.indexOf(""))
+										+ "/employee/accounts?page=" + page1 + "&key=" + key;  
+								}
+							})
+					/** 选择跳转第几页 */
+					$("#page").change(function(){
+						var page = $("#page").val();
+						var key = $("#key").val();
+						if(parseInt(page) > 0){
+							if(parseInt(count) >= parseInt(page)){
+								window.location.href = baseUrl.substring(0, baseUrl
+										.indexOf(""))
+										+ "/employee/accounts?page=" + page + "&key=" + key; 
+							    }
+						    }
+					    })
+				    /** 条件搜索 */
+					$("#search01").click(function(){
+						var key = $("#key").val();
+						window.location.href = baseUrl.substring(0, baseUrl
+								.indexOf(""))
+								+ "/employee/accounts?key=" + key;
+					})
+					/** 停封或解封账号 */
+					$("#table01 tbody tr a").click(function(){
+						var accountId = $(this).parent().parent().attr("tabindex")
+						var state = $(this).html();
+						if("停封" == state){
+							$(this).html("解封");
+		            		$(this).parent().prev().html("不可用");
+							$(this).removeClass("layui-btn-danger")
+							$(this).parent().parent().addClass("active")
+						}else{
+							$(this).html("停封");
+							$(this).parent().prev().html("可用");
+							$(this).addClass("layui-btn-danger")
+							$(this).parent().parent().removeClass("active")
+						}
+						$.ajax({
+							type : "POST",
+							url : "/employee/on-off",
+							data : "accountId=" + accountId,
+							dataType : "json",
+							success : function(msg) {
+								if("success" == msg.message) {
+									layui.use('layer', function(){
+						            	 var layer = layui.layer;
+						            	 if("1" == msg.data){
+						            		 layer.open({
+						            			  title: '操作提示'
+						            			  ,content: '该账号已经被解封'
+						            			});
+						            		 
+						            	 }else{
+						            		 layer.open({
+						            			  title: '操作提示'
+						            			  ,content: '该账号已经被停封'
+						            			});
+						            	 }
+						            });
+								}
+							}
+						});
+					})
+					
+					$("#li01").addClass("active menu-open");
+					$("#li01 ul li:last").addClass("active");
+			    })
+			/*]]>*/
+		</script>
+
+	</div>
+</body>
+
+</html>

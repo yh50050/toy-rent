@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="common/starter :: head"></head>
+<body class="hold-transition skin-blue sidebar-mini">
+	<div class="wrapper">
+		<!-- 这种写法，如果top_header中有多个header tag，则都引入进来 -->
+		<!-- <header th:replace="common/top_header :: header"></header> -->
+
+		<header th:replace="common/starter :: header"></header>
+
+		<!-- Content Wrapper. Contains page content -->
+		<div class="content-wrapper">
+			<!-- Content Header (Page header) -->
+			<section class="content-header">
+				<h1>
+					Page Header <small>Optional description</small>
+				</h1>
+
+				<button id="point" class="btn">点击</button>
+				<ol class="breadcrumb">
+					<li><a href="#"><i class="fa fa-dashboard"></i> Level</a></li>
+					<li class="active">Here</li>
+				</ol>
+				<ul class="layui-timeline">
+					<li class="layui-timeline-item"><i
+						class="layui-icon layui-timeline-axis"></i>
+						<div class="layui-timeline-content layui-text">
+							<div class="layui-timeline-title">2018年，layui 5.0
+								发布。并发展成为中国最受欢迎的前端UI框架（期望）</div>
+						</div></li>
+					<li class="layui-timeline-item"><i
+						class="layui-icon layui-timeline-axis"></i>
+						<div class="layui-timeline-content layui-text">
+							<div class="layui-timeline-title">2017年，layui 里程碑版本 2.0 发布</div>
+						</div></li>
+					<li class="layui-timeline-item"><i
+						class="layui-icon layui-timeline-axis"></i>
+						<div class="layui-timeline-content layui-text">
+							<div class="layui-timeline-title">2016年，layui 首个版本发布</div>
+						</div></li>
+					<li class="layui-timeline-item"><i
+						class="layui-icon layui-timeline-axis"></i>
+						<div class="layui-timeline-content layui-text">
+							<div class="layui-timeline-title">2015年，layui 孵化</div>
+						</div></li>
+					<li class="layui-timeline-item"><i
+						class="layui-icon layui-anim layui-anim-rotate layui-anim-loop layui-timeline-axis"></i>
+						<div class="layui-timeline-content layui-text">
+							<div class="layui-timeline-title">更久前，轮子时代。维护几个独立组件：layer等</div>
+						</div></li>
+				</ul>
+			</section>
+
+			<!-- Main content -->
+			<section class="content container-fluid"></section>
+			<!-- /.content -->
+		</div>
+		<!-- /.content-wrapper -->
+
+
+
+
+		<aside th:replace="common/starter :: aside"></aside>
+		<footer th:replace="common/starter :: footer"></footer>
+		<div class="control-sidebar-bg"></div>
+		<script th:replace="common/starter :: script"></script>
+
+
+	</div>
+</body>
+
+</html>

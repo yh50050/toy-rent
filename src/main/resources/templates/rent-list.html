@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="common/starter :: head">
+
+</head>
+<body class="hold-transition skin-blue sidebar-mini">
+	<div class="wrapper">
+
+		<header th:replace="common/starter :: header"></header>
+
+		<!-- Content Wrapper. Contains page content -->
+		<div class="content-wrapper">
+
+			<!-- Main content -->
+			<!-- Main content -->
+			<section class="content">
+				<div class="row">
+					<div class="col-xs-12">
+						<div class="box">
+							<div class="box-header">
+								<div class="col-md-9">
+									<h3 class="box-title">玩具归还</h3>
+								</div>
+								<div class="col-md-3">
+									<div class="input-group">
+										<input type="text" id="key" class="form-control"
+											placeholder="输入会员编号或电话" th:value="${key}" /> <span
+											class="input-group-btn">
+											<button type="submit" name="search" class="btn btn-flat"
+												id="search01">
+												<i class="fa fa-search"></i>
+											</button>
+										</span>
+									</div>
+								</div>
+							</div>
+							<!-- /.box-header -->
+							<div class="box-body">
+								<table id="table01" class="table table-bordered table-hover">
+									<thead>
+										<tr>
+											<th>玩具名称</th>
+											<th>会员姓名</th>
+											<th>会员编号</th>
+											<th>会员电话</th>
+											<th>租出时间</th>
+											<th>租赁天数</th>
+											<th>实际天数</th>
+											<th>最终付款</th>
+											<th>办理人</th>
+											<th>操作</th>
+										</tr>
+									</thead>
+									<tbody>
+
+										<tr th:each="toyRent,userStat : ${message.data.content}"
+											th:tabindex="${toyRent.trId}"
+											th:class="${toyRent.isOverdue}==1?'danger'">
+											<td th:text="${toyRent.toy.toyName}"></td>
+											<td th:text="${toyRent.member.memberName}"></td>
+											<td th:text="${toyRent.member.memberCode}"></td>
+											<td th:text="${toyRent.member.memberPhone}"></td>
+											<td th:text="${toyRent.trLaseTime}"></td>
+											<td th:text="${toyRent.trDay}+'天'"></td>
+											<td th:text="${toyRent.days}+'天'"></td>
+											<td th:text="${toyRent.money}+'元'"></td>
+											<td
+												th:text="${toyRent.trEmployeeType}==0?${toyRent.person.employeeName}:'管理员：'+${toyRent.person.adminName}"></td>
+											<td th:tabindex="${toyRent.isOverdue}"><a
+												class="layui-btn layui-btn-xs">归还</a></td>
+										</tr>
+									</tbody>
+								</table>
+
+								<nav aria-label="Page navigation">
+									<div class="row">
+										<div class="col-md-10">
+											<ul class="pagination navbar-right" id="page-ul">
+
+											</ul>
+										</div>
+										<div class="col-md-2">
+											<ul class="pagination">
+												<li><input type="text" id="page"
+													style="width: 45px; height: 32px;" /></li>
+												<li th:text=" 共+${message.data.pageCount}+页">共15页</li>
+											</ul>
+										</div>
+									</div>
+								</nav>
+							</div>
+							<!-- /.box-body -->
+						</div>
+
+					</div>
+					<!-- /.col -->
+				</div>
+				<!-- /.row -->
+			</section>
+			<!-- /.content -->
+			<!-- /.content -->
+		</div>
+		<!-- /.content-wrapper -->
+
+
+
+		<aside th:replace="common/starter :: aside"></aside>
+		<footer th:replace="common/starter :: footer"></footer>
+		<div class="control-sidebar-bg"></div>
+		<script th:replace="common/starter :: script"></script>
+
+
+
+		<script th:inline="javascript">
+		/*<![CDATA[*/
+			
+			var baseUrl = window.location.href;
+			$(function() {
+				var start = /*[[${message.data.startPage}]]*/
+				var end = /*[[${message.data.endPage}]]*/
+			    var page1 = /*[[${message.data.paging}]]*/
+				var count = /*[[${message.data.pageCount}]]*/
+				var info = /*[[${#httpServletRequest.getParameter('info')}]]*/
+				
+				if("success" == info)
+				{
+					layui.use('layer', function(){
+		            	 var layer = layui.layer;
+		            	 layer.msg('归还成功');
+		            });
+				}else if("fail" == info)
+				{
+					layui.use('layer', function(){
+		            	 var layer = layui.layer;
+		            	 layer.msg('归还失败');
+		            });
+				}
+			
+				/** 页码展示 */
+				function showPaging(){
+					$("#page-ul").append('<li><span id="previous" aria-label="Previous" style="cursor: pointer;"> <span aria-hidden="true">&laquo;</span> </span></li>');
+					while (parseInt(end) >= parseInt(start))
+					{
+						$("#page-ul").append('<li><a href="#" >'+start+'</a></li>');
+						if(start == page1)
+							$("#page-ul li:last-child").addClass("active");
+						start = start + 1;
+					}
+					$("#page-ul").append('<li><span id="next" aria-label="Next" style="cursor: pointer;"> <span aria-hidden="true">&raquo; </span></span></li>');
+				}
+				showPaging();
+				/** 控制页码显示是否访问 */
+				$("#page-ul li a").click(function() {
+					$("#page-ul li").removeClass("active")
+					$(this).addClass("active")
+				})
+				/** 点击页码跳转 */
+				$("#page-ul li a").click(function() {
+					var key = $("#key").val();
+							var page = $(this).html();
+							window.location.href = baseUrl.substring(0, baseUrl
+									.indexOf(""))
+									+ "/toy-rent/rentList?isReturn=0&page=" + page + "&key=" + key; 
+						})
+				/** 上一页 */
+				$("#previous").click(function() {
+					var key = $("#key").val();
+							if (page1 > 1){
+								page1 = page1 - 1;
+								window.location.href = baseUrl.substring(0, baseUrl
+										.indexOf(""))
+										+ "/toy-rent/rentList?isReturn=0&page=" + page1 + "&key=" + key; 
+							}
+						})
+				/** 下一页 */
+				$("#next").click(function() {
+					
+					var key = $("#key").val();
+						if(parseInt(count) > parseInt(page1)){
+							page1 = page1 + 1;
+							window.location.href = baseUrl.substring(0, baseUrl
+									.indexOf(""))
+									+ "/toy-rent/rentList?isReturn=0&page=" + page1 + "&key=" + key;  
+							}
+						})
+				/** 选择跳转第几页 */
+				$("#page").change(function(){
+					var page = $("#page").val();
+					var key = $("#key").val();
+					if(parseInt(page) > 0){
+						if(parseInt(count) >= parseInt(page)){
+							window.location.href = baseUrl.substring(0, baseUrl
+									.indexOf(""))
+									+ "/toy-rent/rentList?isReturn=0&page=" + page + "&key=" + key; 
+						    }
+					    }
+				    })
+				/** 根据名称或类型搜索 */
+				$("#search01").click(function(){
+					var key = $("#key").val();
+					window.location.href = baseUrl.substring(0, baseUrl
+							.indexOf(""))
+							+ "/toy-rent/rentList?isReturn=0&key=" + key;
+				})
+				
+				
+				/** 归还玩具 */
+				$("#table01 tbody tr a").click(function(){
+					var trId = $(this).parent().parent().attr("tabindex")
+					var key = $("#key").val();
+					var money = $(this).parent().parent().children("td") .eq(7).html()
+					var inf = $(this).parent().attr("tabindex")
+					var info = '';
+					if(1 == parseInt(inf)){
+						info = '，由于租赁逾期，将会扣除20点积分';
+					}
+					layui.use('layer', function(){
+						var layer = layui.layer;
+							layer.open({
+								title: '归还提示',
+								icon: 1,
+								content: '请付租金' + money + info,
+								btn: ['确认归还', '暂不归还'],
+								yes: function(){
+							          layer.closeAll();
+							          window.location.href = baseUrl.substring(0, baseUrl
+												.indexOf(""))
+												+ "/toy-rent/returnToy?isReturn=0&trId="+trId+"&page=" + page1 + "&key=" + key;
+							    }
+						});
+					});
+				})
+				
+			});
+			$("#li04").addClass("active menu-open");
+			$("#li04 ul").children("li") .eq(1).addClass("active");
+		/*]]>*/
+		</script>
+
+	</div>
+</body>
+
+</html>

@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="common/starter :: head">
+
+</head>
+<body class="hold-transition skin-blue sidebar-mini">
+	<div class="wrapper">
+
+		<header th:replace="common/starter :: header"></header>
+
+		<!-- Content Wrapper. Contains page content -->
+		<div class="content-wrapper">
+
+			<!-- Main content -->
+			<section class="content">
+				<div class="row">
+					<div class="col-xs-12">
+						<div class="box">
+							<div class="box-header">
+								<div class="col-md-9">
+									<h3 class="box-title">玩具信息</h3>
+								</div>
+								<div class="col-md-3">
+									<div class="input-group">
+										<input type="text" id="key" class="form-control"
+											placeholder="输入玩具名称或类型" th:value="${key}" /> <span
+											class="input-group-btn">
+											<button type="submit" name="search" class="btn btn-flat"
+												id="search01">
+												<i class="fa fa-search"></i>
+											</button>
+										</span>
+									</div>
+								</div>
+							</div>
+							<!-- /.box-header -->
+							<div class="box-body">
+								<table id="table01"
+									class="table table-bordered table-hover table-striped">
+									<thead>
+										<tr>
+											<th>名称</th>
+											<th>库存</th>
+											<th>租出</th>
+											<th>损坏</th>
+											<th>日租金</th>
+											<th>所需积分</th>
+											<th>类型</th>
+										</tr>
+									</thead>
+									<tbody>
+
+										<tr th:each="toy,userStat : ${message.data.content}"
+											th:tabindex="${toy.toyId}">
+											<td th:text="${toy.toyName}"></td>
+											<td><span th:text="${toy.toyStock}==0?'已租空':${toy.toyStock}" th:class="${toy.toyStock}==0?'layui-badge layui-bg-orange'"></span></td>
+											<td th:text="${toy.toyRentAmount}"></td>
+											<td th:text="${toy.toyScrap}"></td>
+											<td th:text="${toy.toyDailyRent}"></td>
+											<td th:text="${toy.toyNeedPoint}"></td>
+											<td th:text="${toy.toyType}"></td>
+										</tr>
+
+									</tbody>
+								</table>
+								<nav aria-label="Page navigation">
+									<div class="row">
+
+										<div class="col-md-10">
+											<ul class="pagination navbar-right" id="page-ul">
+
+											</ul>
+										</div>
+										<div class="col-md-2">
+											<ul class="pagination">
+												<li><input type="text" id="page"
+													style="width: 45px; height: 32px;" /></li>
+												<li th:text=" 共+${message.data.pageCount}+页">共15页</li>
+											</ul>
+										</div>
+									</div>
+								</nav>
+
+							</div>
+							<!-- /.box-body -->
+						</div>
+
+					</div>
+					<!-- /.col -->
+				</div>
+				<!-- /.row -->
+			</section>
+			<!-- /.content -->
+			<!-- /.content -->
+		</div>
+		<!-- /.content-wrapper -->
+
+
+		<!--add Modal -->
+		<div class="modal fade" id="myModal" tabindex="-1" role="dialog"
+			aria-labelledby="myModalLabel">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+
+					<form action="/toy/update" method="post" class="form-inline">
+						<input type="hidden" id="toyId" name="toyId" /> <input
+							type="hidden" id="isRent" name="toyIsRent" /> <input
+							type="hidden" id="inpage" name="page" /> <input type="hidden"
+							id="inkey" name="key" />
+
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal"
+								aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+							</button>
+							<h4 class="modal-title" id="myModalLabel">修改玩具信息</h4>
+						</div>
+						<div class="modal-body">
+							<table class="table">
+								<tr>
+									<td><div class="form-group">
+											<label>名称</label> <input id="name" type="text"
+												class="form-control" name="toyName" required="required" />
+										</div></td>
+									<td><div class="form-group">
+											<label>类型</label> <select id="type" class="form-control"
+												name="toyType">
+												<option>其他</option>
+												<option>毛绒玩具</option>
+												<option>塑胶玩具</option>
+												<option>电动玩具</option>
+												<option>益智玩具</option>
+												<option>木制玩具</option>
+												<option>飞行玩具</option>
+												<option>金属玩具</option>
+												<option>充气玩具</option>
+												<option>各种模型</option>
+											</select>
+										</div></td>
+
+								</tr>
+								<tr>
+									<td><div class="form-group">
+											<label>出租中</label> <input id="rentAmount" type="number"
+												class="form-control" name="toyRentAmount"
+												required="required" readonly="readonly" min="0" />
+										</div></td>
+									<td><div class="form-group">
+											<label>库存</label> <input id="stock" type="number"
+												class="form-control" name="toyStock" required="required"
+												min="0" />
+										</div></td>
+								</tr>
+								<tr>
+									<td><div class="form-group">
+											<label>已损坏</label> <input id="scrap" type="number"
+												class="form-control" name="toyScrap" required="required"
+												min="0" />
+										</div></td>
+									<td><div class="form-group">
+											<label>所需积分</label> <input id="needPoint" type="number"
+												class="form-control" name="toyNeedPoint" required="required"
+												min="0" />
+										</div></td>
+								</tr>
+								<tr>
+									<td><div class="form-group">
+											<label>日租金</label> <input id="dailyRent" type="number"
+												class="form-control" name="toyDailyRent" min="0" />
+										</div></td>
+									<td>
+										<div class="form-group">
+											<label>超出租金</label> <input id="beyondRent" type="number"
+												class="form-control" name="toyBeyondRent" min="0" />
+										</div>
+									</td>
+								</tr>
+							</table>
+
+						</div>
+						<div id="footer" class="modal-footer">
+							<button type="button" class="btn btn-default"
+								data-dismiss="modal">关闭</button>
+							<button id="sub01" type="submit" class="btn btn-primary">保存修改</button>
+						</div>
+
+					</form>
+				</div>
+			</div>
+		</div>
+
+
+		<aside th:replace="common/starter :: aside"></aside>
+		<footer th:replace="common/starter :: footer"></footer>
+		<div class="control-sidebar-bg"></div>
+		<script th:replace="common/starter :: script"></script>
+
+
+
+		<script th:inline="javascript">
+		/*<![CDATA[*/
+			
+			var baseUrl = window.location.href;
+			$(function() {
+				var start = /*[[${message.data.startPage}]]*/
+				var end = /*[[${message.data.endPage}]]*/
+			    var page1 = /*[[${message.data.paging}]]*/
+				var count = /*[[${message.data.pageCount}]]*/
+				var update = /*[[${#httpServletRequest.getParameter('update')}]]*/
+				
+				if("success" == update)
+				{
+					layui.use('layer', function(){
+		            	 var layer = layui.layer;
+		            	 layer.msg('修改成功');
+		            });
+				}else if("fail" == update)
+				{
+					layui.use('layer', function(){
+		            	 var layer = layui.layer;
+		            	 layer.msg('修改失败');
+		            });
+				}
+				/** 页码展示 */
+				function showPaging(){
+					$("#page-ul").append('<li><span id="previous" aria-label="Previous" style="cursor: pointer;"> <span aria-hidden="true">&laquo;</span> </span></li>');
+					while (parseInt(end) >= parseInt(start))
+					{
+						$("#page-ul").append('<li><a href="#" >'+start+'</a></li>');
+						if(start == page1)
+							$("#page-ul li:last-child").addClass("active");
+						start = start + 1;
+					}
+					$("#page-ul").append('<li><span id="next" aria-label="Next" style="cursor: pointer;"> <span aria-hidden="true">&raquo; </span></span></li>');
+				}
+				showPaging();
+				/** 控制页码显示是否访问 */
+				$("#page-ul li a").click(function() {
+					$("#page-ul li").removeClass("active")
+					$(this).addClass("active")
+				})
+				/** 点击页码跳转 */
+				$("#page-ul li a").click(function() {
+					var key = $("#key").val();
+							var page = $(this).html();
+							window.location.href = baseUrl.substring(0, baseUrl
+									.indexOf(""))
+									+ "/toy/getList?page=" + page + "&key=" + key; 
+						})
+				/** 上一页 */
+				$("#previous").click(function() {
+					var key = $("#key").val();
+							if (page1 > 1){
+								page1 = page1 - 1;
+								window.location.href = baseUrl.substring(0, baseUrl
+										.indexOf(""))
+										+ "/toy/getList?page=" + page1 + "&key=" + key; 
+							}
+						})
+				/** 下一页 */
+				$("#next").click(function() {
+					
+					var key = $("#key").val();
+						if(parseInt(count) > parseInt(page1)){
+							page1 = page1 + 1;
+							window.location.href = baseUrl.substring(0, baseUrl
+									.indexOf(""))
+									+ "/toy/getList?page=" + page1 + "&key=" + key;  
+							}
+						})
+				/** 选择跳转第几页 */
+				$("#page").change(function(){
+					var page = $("#page").val();
+					var key = $("#key").val();
+					if(parseInt(page) > 0){
+						if(parseInt(count) >= parseInt(page)){
+							window.location.href = baseUrl.substring(0, baseUrl
+									.indexOf(""))
+									+ "/toy/getList?page=" + page + "&key=" + key; 
+						    }
+					    }
+				    })
+				/** 根据名称或类型搜索 */
+				$("#search01").click(function(){
+					var key = $("#key").val();
+					window.location.href = baseUrl.substring(0, baseUrl
+							.indexOf(""))
+							+ "/toy/getList?key=" + key;
+				})
+				
+				/** 修改玩具操作 */
+				$("table tbody tr").click(function(){
+            		var key = $("#key").val();
+            		var toyId = $(this).attr("tabindex");
+            		$.ajax({
+						type : "POST",
+						url : "/toy/get",
+						data : "toyId=" + toyId,
+						dataType : "json",
+						success : function(msg) {
+							var data = msg.data;
+							$("#toyId").val(data.toyId)
+							$("#isRent").val(data.toyIsRent)
+							$("#inpage").val(page1)
+							$("#inkey").val(key)
+							$("#name").val(data.toyName)
+							$("#type").val(data.toyType)
+							$("#rentAmount").val(data.toyRentAmount)
+							$("#stock").val(data.toyStock)
+							$("#scrap").val(data.toyScrap)
+							$("#needPoint").val(data.toyNeedPoint)
+							$("#dailyRent").val(data.toyDailyRent)
+							$("#beyondRent").val(data.toyBeyondRent)
+							$("#myModal").modal('show');
+						}
+					});
+            	})
+			});
+			
+			$("#li02").addClass("active menu-open");
+			$("#li02 ul li:first").addClass("active");
+		/*]]>*/
+		</script>
+
+	</div>
+</body>
+
+</html>

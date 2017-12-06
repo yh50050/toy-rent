@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="common/starter :: head">
+
+</head>
+<body class="hold-transition skin-blue sidebar-mini">
+	<div class="wrapper">
+
+		<header th:replace="common/starter :: header"></header>
+
+		<!-- Content Wrapper. Contains page content -->
+		<div class="content-wrapper">
+
+			<!-- Main content -->
+			<!-- Main content -->
+			<section class="content">
+				<div class="row">
+					<div class="col-xs-12">
+						<div class="box">
+							<div class="box-header">
+								<div class="col-md-9">
+									<h3 class="box-title">玩具信息</h3>
+								</div>
+								<div class="col-md-3">
+									<div class="input-group">
+										<input type="text" id="key" class="form-control"
+											placeholder="输入玩具名称或类型" th:value="${key}" /> <span
+											class="input-group-btn">
+											<button type="submit" name="search" class="btn btn-flat"
+												id="search01">
+												<i class="fa fa-search"></i>
+											</button>
+										</span>
+									</div>
+								</div>
+							</div>
+							<!-- /.box-header -->
+							<div class="box-body">
+								<table id="table01" class="table table-bordered table-hover">
+									<thead>
+										<tr>
+											<th>名称</th>
+											<th>库存</th>
+											<th>租出</th>
+											<th>报废</th>
+											<th>日租金</th>
+											<th>所需积分</th>
+											<th>类型</th>
+											<th>状态</th>
+											<th>操作</th>
+										</tr>
+									</thead>
+									<tbody>
+
+										<tr th:each="toy,userStat : ${message.data.content}"
+											th:tabindex="${toy.toyId}">
+											<td th:text="${toy.toyName}"></td>
+											<td th:text="${toy.toyStock}"></td>
+											<td th:text="${toy.toyRentAmount}"></td>
+											<td th:text="${toy.toyScrap}"></td>
+											<td th:text="${toy.toyDailyRent}"></td>
+											<td th:text="${toy.toyNeedPoint}"></td>
+											<td th:text="${toy.toyType}"></td>
+											<td th:text="${toy.toyIsRent}==1?'已上架':'未上架'"></td>
+											<td th:tabindex="${toy.toyId}"><a
+												href="javascript:void(0);"
+												th:class="${toy.toyIsRent}==1?'layui-btn layui-btn-primary layui-btn-xs':'layui-btn layui-btn-xs'"
+												th:text="${toy.toyIsRent}==1?'下架':'上架'">上/下架</a> <a
+												class="layui-btn layui-btn-danger layui-btn-xs"
+												th:href="'/toy/del?toyId='+${toy.toyId}">删除</a></td>
+										</tr>
+
+									</tbody>
+								</table>
+								<nav aria-label="Page navigation">
+									<div class="row">
+										<div class="col-md-2">
+											<ul class="pagination">
+												<li>
+													<button id="addemp" type="button" class="btn btn-primary"
+														data-toggle="modal" data-target="#myModal">添加玩具</button>
+												</li>
+											</ul>
+										</div>
+										<div class="col-md-8">
+											<ul class="pagination navbar-right" id="page-ul">
+
+											</ul>
+										</div>
+										<div class="col-md-2">
+											<ul class="pagination">
+												<li><input type="text" id="page"
+													style="width: 45px; height: 32px;" /></li>
+												<li th:text=" 共+${message.data.pageCount}+页">共15页</li>
+											</ul>
+										</div>
+									</div>
+								</nav>
+
+							</div>
+							<!-- /.box-body -->
+						</div>
+
+					</div>
+					<!-- /.col -->
+				</div>
+				<!-- /.row -->
+			</section>
+			<!-- /.content -->
+			<!-- /.content -->
+		</div>
+		<!-- /.content-wrapper -->
+
+
+		<!--add Modal -->
+		<div class="modal fade" id="myModal" tabindex="-1" role="dialog"
+			aria-labelledby="myModalLabel">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+
+					<form action="/toy/add" method="post" class="form-inline">
+						<input type="hidden" name="toyIsRent" value="0" /> <input
+							type="hidden" name="toyRentAmount" value="0" /> <input
+							type="hidden" name="toyScrap" value="0" /> <input type="hidden"
+							id="inpage" name="page" /> <input type="hidden" id="inkey"
+							name="key" />
+
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal"
+								aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+							</button>
+							<h4 class="modal-title" id="myModalLabel">玩具信息</h4>
+						</div>
+						<div class="modal-body">
+							<table class="table">
+								<tr>
+									<td><div class="form-group">
+											<label>名称</label> <input id="name" type="text"
+												class="form-control" name="toyName" required="required" />
+										</div></td>
+									<td><div class="form-group">
+											<label>类型</label> <select id="type" class="form-control"
+												name="toyType">
+												<option>其他</option>
+												<option>毛绒玩具</option>
+												<option>塑胶玩具</option>
+												<option>电动玩具</option>
+												<option>益智玩具</option>
+												<option>木制玩具</option>
+												<option>飞行玩具</option>
+												<option>金属玩具</option>
+												<option>充气玩具</option>
+												<option>各种模型</option>
+											</select>
+										</div></td>
+
+								</tr>
+								<tr>
+									<td><div class="form-group">
+											<label>日租金</label> <input id="dailyRent" type="number"
+												class="form-control" name="toyDailyRent" required="required"
+												min="0" />
+										</div></td>
+									<td><div class="form-group">
+											<label>库存</label> <input id="stock" type="number"
+												class="form-control" name="toyStock" required="required"
+												min="0" />
+										</div></td>
+								</tr>
+								<tr>
+									<td><div class="form-group">
+											<label>所需积分</label> <input id="needPoint" type="number"
+												class="form-control" name="toyNeedPoint" required="required"
+												min="0" />
+										</div></td>
+									<td>
+										<div class="form-group">
+											<label>超出租金</label> <input id="beyondRent" type="number"
+												class="form-control" name="toyBeyondRent"
+												required="required" min="0" />
+										</div>
+									</td>
+								</tr>
+							</table>
+
+						</div>
+						<div id="footer" class="modal-footer">
+							<button type="button" class="btn btn-default"
+								data-dismiss="modal">关闭</button>
+							<button id="sub01" type="submit" class="btn btn-primary">添加</button>
+						</div>
+
+					</form>
+				</div>
+			</div>
+		</div>
+
+		<aside th:replace="common/starter :: aside"></aside>
+		<footer th:replace="common/starter :: footer"></footer>
+		<div class="control-sidebar-bg"></div>
+		<script th:replace="common/starter :: script"></script>
+
+
+
+		<script th:inline="javascript">
+		/*<![CDATA[*/
+			
+			var baseUrl = window.location.href;
+			$(function() {
+				var start = /*[[${message.data.startPage}]]*/
+				var end = /*[[${message.data.endPage}]]*/
+			    var page1 = /*[[${message.data.paging}]]*/
+				var count = /*[[${message.data.pageCount}]]*/
+				var update = /*[[${#httpServletRequest.getParameter('update')}]]*/
+				var add = /*[[${#httpServletRequest.getParameter('add')}]]*/
+				var del = /*[[${#httpServletRequest.getParameter('del')}]]*/
+				
+				if("success" == add)
+				{
+					layui.use('layer', function(){
+		            	 var layer = layui.layer;
+		            	 layer.msg('添加成功');
+		            });
+				}else if("fail" == add)
+				{
+					layui.use('layer', function(){
+		            	 var layer = layui.layer;
+		            	 layer.msg('添加失败');
+		            });
+				}
+				
+				if("success" == del)
+				{
+					layui.use('layer', function(){
+		            	 var layer = layui.layer;
+		            	 layer.msg('删除成功');
+		            });
+				}else if("fail" == del)
+				{
+					layui.use('layer', function(){
+		            	 var layer = layui.layer;
+		            	 layer.msg('删除失败');
+		            });
+				}
+				
+				/** 页码展示 */
+				function showPaging(){
+					$("#page-ul").append('<li><span id="previous" aria-label="Previous" style="cursor: pointer;"> <span aria-hidden="true">&laquo;</span> </span></li>');
+					while (parseInt(end) >= parseInt(start))
+					{
+						$("#page-ul").append('<li><a href="#" >'+start+'</a></li>');
+						if(start == page1)
+							$("#page-ul li:last-child").addClass("active");
+						start = start + 1;
+					}
+					$("#page-ul").append('<li><span id="next" aria-label="Next" style="cursor: pointer;"> <span aria-hidden="true">&raquo; </span></span></li>');
+				}
+				showPaging();
+				/** 控制页码显示是否访问 */
+				$("#page-ul li a").click(function() {
+					$("#page-ul li").removeClass("active")
+					$(this).addClass("active")
+				})
+				/** 点击页码跳转 */
+				$("#page-ul li a").click(function() {
+					var key = $("#key").val();
+							var page = $(this).html();
+							window.location.href = baseUrl.substring(0, baseUrl
+									.indexOf(""))
+									+ "/toy/getAllList?page=" + page + "&key=" + key; 
+						})
+				/** 上一页 */
+				$("#previous").click(function() {
+					var key = $("#key").val();
+							if (page1 > 1){
+								page1 = page1 - 1;
+								window.location.href = baseUrl.substring(0, baseUrl
+										.indexOf(""))
+										+ "/toy/getAllList?page=" + page1 + "&key=" + key; 
+							}
+						})
+				/** 下一页 */
+				$("#next").click(function() {
+					
+					var key = $("#key").val();
+						if(parseInt(count) > parseInt(page1)){
+							page1 = page1 + 1;
+							window.location.href = baseUrl.substring(0, baseUrl
+									.indexOf(""))
+									+ "/toy/getAllList?page=" + page1 + "&key=" + key;  
+							}
+						})
+				/** 选择跳转第几页 */
+				$("#page").change(function(){
+					var page = $("#page").val();
+					var key = $("#key").val();
+					if(parseInt(page) > 0){
+						if(parseInt(count) >= parseInt(page)){
+							window.location.href = baseUrl.substring(0, baseUrl
+									.indexOf(""))
+									+ "/toy/getAllList?page=" + page + "&key=" + key; 
+						    }
+					    }
+				    })
+				/** 根据名称或类型搜索 */
+				$("#search01").click(function(){
+					var key = $("#key").val();
+					window.location.href = baseUrl.substring(0, baseUrl
+							.indexOf(""))
+							+ "/toy/getAllList?key=" + key;
+				})
+				
+				/** 添加员工操作 */
+				$("#addemp").click(function(){
+					var key = $("#key").val();
+					$("#inpage1").val(page1)
+					$("#inkey1").val(key)
+				})
+				/** 上架或下架玩具 */
+				$("#table01 tbody tr a").click(function(){
+					var toyId = $(this).parent().attr("tabindex")
+					var state = $(this).html();
+					if("下架" == state){
+						$(this).html("上架");
+	            		$(this).parent().prev().html("未上架");
+						$(this).removeClass("layui-btn-primary")
+					}else{
+						$(this).html("下架");
+						$(this).parent().prev().html("已上架");
+						$(this).addClass("layui-btn-primary")
+					}
+					$.ajax({
+						type : "POST",
+						url : "/toy/up-down",
+						data : "toyId=" + toyId,
+						dataType : "json",
+						success : function(msg) {
+							if("success" == msg.message) {
+								layui.use('layer', function(){
+					            	 var layer = layui.layer;
+					            	 if("1" == msg.data){
+					            		 layer.open({
+					            			  title: '操作提示',
+					            			  icon: 1,
+					            			  content: '该玩具已经上架'
+					            			});
+					            		 
+					            	 }else{
+					            		 layer.open({
+					            			  title: '操作提示',
+					            			  icon: 1,
+					            			  content: '该玩具已经被下架'
+					            			});
+					            	 }
+					            });
+							}
+						}
+					});
+				})
+			});
+			$("#li02").addClass("active menu-open");
+			$("#li02 ul li:last").addClass("active");
+		/*]]>*/
+		</script>
+
+	</div>
+</body>
+
+</html>

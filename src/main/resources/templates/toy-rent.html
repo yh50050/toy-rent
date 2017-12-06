@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="common/starter :: head">
+
+</head>
+<body class="hold-transition skin-blue sidebar-mini">
+	<div class="wrapper">
+		<header th:replace="common/starter :: header"></header>
+		<div class="content-wrapper">
+			<!-- Main content -->
+			<section class="content">
+				<div class="row">
+					<div class="col-xs-12">
+						<div class="box">
+							<div class="box-header">
+								<div class="col-md-3">
+									<h3 class="box-title">玩具出租</h3>
+								</div>
+								<div class="col-md-6">
+									<form class="form-inline">
+										<ul class="navbar-right">
+											<li>
+												<div class="form-group">
+													<label>玩具类型</label> <select id="type" class="form-control"
+														name="toyType">
+														<option>全部玩具</option>
+														<option>毛绒玩具</option>
+														<option>塑胶玩具</option>
+														<option>电动玩具</option>
+														<option>益智玩具</option>
+														<option>木制玩具</option>
+														<option>飞行玩具</option>
+														<option>金属玩具</option>
+														<option>充气玩具</option>
+														<option>各种模型</option>
+														<option>其他</option>
+													</select>
+												</div>
+											</li>
+										</ul>
+									</form>
+								</div>
+								<div class="col-md-3">
+									<div class="input-group">
+										<input type="text" id="key" class="form-control"
+											placeholder="输入玩具名称" th:value="${name}" /> <span
+											class="input-group-btn">
+											<button type="submit" name="search" class="btn btn-flat"
+												id="search01">
+												<i class="fa fa-search"></i>
+											</button>
+										</span>
+									</div>
+								</div>
+							</div>
+							<!-- /.box-header -->
+							<div class="box-body">
+								<table id="table01"
+									class="table table-bordered table-hover table-striped">
+									<thead>
+										<tr>
+											<th>名称</th>
+											<th>类型</th>
+											<th>库存</th>
+											<th>所需积分</th>
+											<th>日租金</th>
+											<th>超出租金</th>
+										</tr>
+									</thead>
+									<tbody>
+
+										<tr th:each="toy,userStat : ${message.data.content}"
+											th:tabindex="${toy.toyId}">
+											<td th:text="${toy.toyName}"></td>
+											<td th:text="${toy.toyType}"></td>
+											<td><span
+												th:text="${toy.toyStock}==0?'已租空':${toy.toyStock}"
+												th:class="${toy.toyStock}==0?'layui-badge layui-bg-orange'"></span></td>
+											<td th:text="${toy.toyNeedPoint}"></td>
+											<td th:text="${toy.toyDailyRent}"></td>
+											<td th:text="${toy.toyBeyondRent}"></td>
+										</tr>
+
+									</tbody>
+								</table>
+								<nav aria-label="Page navigation">
+									<div class="row">
+
+										<div class="col-md-10">
+											<ul class="pagination navbar-right" id="page-ul">
+
+											</ul>
+										</div>
+										<div class="col-md-2">
+											<ul class="pagination">
+												<li><input type="text" id="page"
+													style="width: 45px; height: 32px;" /></li>
+												<li th:text=" 共+${message.data.pageCount}+页">共15页</li>
+											</ul>
+										</div>
+									</div>
+								</nav>
+
+							</div>
+							<!-- /.box-body -->
+						</div>
+
+					</div>
+					<!-- /.col -->
+				</div>
+				<!-- /.row -->
+			</section>
+			<!-- /.content -->
+			<!-- /.content -->
+		</div>
+		<!-- /.content-wrapper -->
+
+
+		<aside th:replace="common/starter :: aside"></aside>
+		<footer th:replace="common/starter :: footer"></footer>
+		<div class="control-sidebar-bg"></div>
+		<script th:replace="common/starter :: script"></script>
+
+
+
+		<script th:inline="javascript">
+		/*<![CDATA[*/
+			
+			var baseUrl = window.location.href;
+			$(function() {
+				var start = /*[[${message.data.startPage}]]*/
+				var end = /*[[${message.data.endPage}]]*/
+			    var page1 = /*[[${message.data.paging}]]*/
+				var count = /*[[${message.data.pageCount}]]*/
+				var type = /*[[${type}]]*/
+				var info = /*[[${info}]]*/
+				
+				if("" == type || null == type)
+					type = "全部玩具"
+				$("#type").val(type)
+				if("success" == info)
+				{
+					layui.use('layer', function(){
+		            	 var layer = layui.layer;
+		            	 layer.msg('租赁成功');
+		            });
+				}else if("fail" == info)
+				{
+					layui.use('layer', function(){
+		            	 var layer = layui.layer;
+		            	 layer.msg('租赁失败');
+		            });
+				}
+				/** 页码展示 */
+				function showPaging(){
+					$("#page-ul").append('<li><span id="previous" aria-label="Previous" style="cursor: pointer;"> <span aria-hidden="true">&laquo;</span> </span></li>');
+					while (parseInt(end) >= parseInt(start))
+					{
+						$("#page-ul").append('<li><a href="#" >'+start+'</a></li>');
+						if(start == page1)
+							$("#page-ul li:last-child").addClass("active");
+						start = start + 1;
+					}
+					$("#page-ul").append('<li><span id="next" aria-label="Next" style="cursor: pointer;"> <span aria-hidden="true">&raquo; </span></span></li>');
+				}
+				showPaging();
+				/** 控制页码显示是否访问 */
+				$("#page-ul li a").click(function() {
+					$("#page-ul li").removeClass("active")
+					$(this).addClass("active")
+				})
+				/** 点击页码跳转 */
+				$("#page-ul li a").click(function() {
+					var type = $("#type").val();
+					if("全部玩具" == type)
+						type = ""
+					var key = $("#key").val();
+							var page = $(this).html();
+							window.location.href = baseUrl.substring(0, baseUrl
+									.indexOf(""))
+									+ "/toy-rent/getList?page=" + page + "&name=" + key + "&type=" + type; 
+						})
+				/** 上一页 */
+				$("#previous").click(function() {
+					var type = $("#type").val();
+					if("全部玩具" == type)
+						type = ""
+					var key = $("#key").val();
+							if (page1 > 1){
+								page1 = page1 - 1;
+								window.location.href = baseUrl.substring(0, baseUrl
+										.indexOf(""))
+										+ "/toy-rent/getList?page=" + page1 + "&name=" + key + "&type=" + type; 
+							}
+						})
+				/** 下一页 */
+				$("#next").click(function() {
+					var type = $("#type").val();
+					if("全部玩具" == type)
+						type = ""
+					var key = $("#key").val();
+						if(parseInt(count) > parseInt(page1)){
+							page1 = page1 + 1;
+							window.location.href = baseUrl.substring(0, baseUrl
+									.indexOf(""))
+									+ "/toy-rent/getList?page=" + page1 + "&name=" + key + "&type=" + type; 
+							}
+						})
+				/** 选择跳转第几页 */
+				$("#page").change(function(){
+					var page = $("#page").val();
+					var type = $("#type").val();
+					if("全部玩具" == type)
+						type = ""
+					var key = $("#key").val();
+					if(parseInt(page) > 0){
+						if(parseInt(count) >= parseInt(page)){
+							window.location.href = baseUrl.substring(0, baseUrl
+									.indexOf(""))
+									+ "/toy-rent/getList?page=" + page + "&name=" + key + "&type=" + type; 
+						    }
+					    }
+				    })
+				/** 根据名称和类型搜索 */
+				$("#search01").click(function(){
+					var type = $("#type").val();
+					if("全部玩具" == type)
+						type = ""
+					var key = $("#key").val();
+					window.location.href = baseUrl.substring(0, baseUrl
+							.indexOf(""))
+							+ "/toy-rent/getList?name=" + key + "&type=" + type; 
+				})
+				//选择玩具类型
+				$("#type").change(function(){
+					var type = $("#type").val();
+					if("全部玩具" == type)
+						type = ""
+					window.location.href = baseUrl.substring(0, baseUrl
+							.indexOf(""))
+							+ "/toy-rent/getList?type=" + type;
+				})
+				
+				/** 修改玩具操作 */
+				$("table tbody tr").click(function(){
+					var text = $(this).children('td').eq(2).children('span').html()
+					if("已租空" == text){
+						layui.use('layer', function(){
+							var layer = layui.layer;
+			            	layer.open({
+		            			 title: '租赁提示',
+		            		     icon: 5,
+		            			 content: '很遗憾，该玩具已经被租完了'
+		            		});
+			            });
+					}else{
+						var type = $("#type").val();
+						if("全部玩具" == type)
+							type = ""
+						var name = $("#key").val();
+	            		var toyId = $(this).attr("tabindex");
+	            		window.location.href = baseUrl.substring(0, baseUrl
+								.indexOf(""))
+								+ "/toy-rent/rent?page=" + page1 + "&name=" + name + "&type=" + type + "&toyId=" + toyId;
+					}
+            	})
+			});
+			
+            
+			$("#li04").addClass("active menu-open");
+			$("#li04 ul li:first").addClass("active");
+		/*]]>*/
+		</script>
+
+	</div>
+</body>
+
+</html>

@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="common/starter :: head">
+
+</head>
+<body class="hold-transition skin-blue sidebar-mini">
+	<div class="wrapper">
+
+		<header th:replace="common/starter :: header"></header>
+
+		<!-- Content Wrapper. Contains page content -->
+		<div class="content-wrapper">
+
+			<!-- Content Header (Page header) -->
+			<!-- <section class="content-header">
+				<h1>
+					员工管理 <small>/ 员工信息</small>
+				</h1>
+
+				<ol class="breadcrumb">
+					<li><a href="#"><i class="fa fa-dashboard"></i>Level</a></li>
+					<li class="active">Here</li>
+				</ol>
+			</section> -->
+
+			<!-- Main content -->
+			<!-- Main content -->
+			<section class="content">
+				<div class="row">
+					<div class="col-xs-12">
+						<div class="box">
+							<div class="box-header">
+								<div class="col-md-9">
+									<h3 class="box-title">员工信息</h3>
+								</div>
+								<div class="col-md-3">
+									<div class="input-group">
+										<input type="text" id="key" class="form-control"
+											placeholder="输入员工姓名或编号" th:value="${key}" /> <span
+											class="input-group-btn">
+											<button type="submit" name="search" class="btn btn-flat"
+												id="search01">
+												<i class="fa fa-search"></i>
+											</button>
+										</span>
+									</div>
+								</div>
+							</div>
+							<!-- /.box-header -->
+							<div class="box-body">
+								<table id="table01"
+									class="table table-bordered table-hover  table-striped">
+									<thead>
+										<tr>
+											<th>姓名</th>
+											<th>编号</th>
+											<th>性别</th>
+											<th>电话</th>
+											<th>部门</th>
+										</tr>
+									</thead>
+									<tbody>
+
+										<tr th:each="employee,userStat : ${message.data.content}"
+											th:tabindex="${employee.employeeId}">
+											<td th:text="${employee.employeeName}"></td>
+											<td th:text="${employee.employeeCode}"></td>
+											<td th:text="${employee.employeeSex}"></td>
+											<td th:text="${employee.employeePhone}"></td>
+											<td th:text="${employee.employeeBranch}"></td>
+										</tr>
+
+									</tbody>
+								</table>
+								<nav aria-label="Page navigation">
+									<div class="row">
+										<div class="col-md-2">
+											<ul class="pagination">
+												<li><button id="addemp" type="button"
+														class="btn btn-primary" data-toggle="modal"
+														data-target="#myModal2">添加员工</button></li>
+											</ul>
+										</div>
+										<div class="col-md-8">
+											<ul class="pagination navbar-right" id="page-ul">
+
+											</ul>
+										</div>
+										<div class="col-md-2">
+											<ul class="pagination">
+												<li><input type="text" id="page"
+													style="width: 45px; height: 32px;" /></li>
+												<li th:text=" 共+${message.data.pageCount}+页">共15页</li>
+											</ul>
+										</div>
+									</div>
+								</nav>
+
+							</div>
+							<!-- /.box-body -->
+						</div>
+
+					</div>
+					<!-- /.col -->
+				</div>
+				<!-- /.row -->
+			</section>
+			<!-- /.content -->
+			<!-- /.content -->
+		</div>
+		<!-- /.content-wrapper -->
+
+
+		<!--add Modal -->
+		<div class="modal fade" id="myModal" tabindex="-1" role="dialog"
+			aria-labelledby="myModalLabel">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+
+					<form action="/employee/update" method="post" class="form-inline">
+						<input type="hidden" id="empId" name="employeeId" /> <input
+							type="hidden" id="inpage" name="page" /> <input type="hidden"
+							id="inkey" name="key" />
+
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal"
+								aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+							</button>
+							<h4 class="modal-title" id="myModalLabel">修改员工信息</h4>
+						</div>
+						<div class="modal-body">
+							<table class="table">
+								<tr>
+									<td><div class="form-group">
+											<label>姓名</label> <input id="name" type="text"
+												class="form-control" name="employeeName" placeholder="Name"
+												required="required" />
+										</div></td>
+									<td><div class="form-group">
+											<label>性别&ensp;&ensp;&ensp;&ensp;</label><input id="sex1"
+												type="radio" name="employeeSex" value="男" checked="checked" />男&ensp;&ensp;&ensp;<input
+												id="sex2" type="radio" name="employeeSex" value="女" />女
+										</div></td>
+								</tr>
+								<tr>
+									<td><div class="form-group">
+											<label>编号</label> <input id="code" type="text"
+												class="form-control" name="employeeCode" placeholder="Code"
+												required="required" readonly="readonly" />
+										</div></td>
+									<td><div class="form-group">
+											<label>部门</label> <select id="branch" class="form-control"
+												name="employeeBranch">
+												<option>市场部</option>
+												<option>采购部</option>
+												<option>维修部</option>
+												<option>人事部</option>
+												<option>财务部</option>
+											</select>
+										</div></td>
+								</tr>
+								<tr>
+									<td><div class="form-group">
+											<label>电话</label> <input id="phone" type="tel"
+												class="form-control" name="employeePhone"
+												placeholder="Phone" required="required" />
+										</div></td>
+									<td><div class="form-group">
+											<label>邮箱</label> <input id="email" type="email"
+												class="form-control" name="employeeEmail"
+												placeholder="Email" required="required" />
+										</div></td>
+								</tr>
+								<tr>
+									<td><div class="form-group">
+											<label>出生日期</label> <input id="birth" type="date"
+												class="form-control" name="employeeBirth" />
+										</div></td>
+									<td>
+										<div class="form-group">
+											<label>通讯地址</label> <input id="address" type="text"
+												class="form-control" name="employeeAddress"
+												placeholder="Postal address" />
+										</div>
+									</td>
+								</tr>
+								<tr>
+									<td>
+										<div class="form-group">
+											<label>是否在职&ensp;&ensp;</label> <input id="onjob"
+												type="checkbox" name="employeeOnJop" value="1"
+												checked="checked" />
+										</div>
+									</td>
+									<td></td>
+								</tr>
+							</table>
+
+						</div>
+						<div id="footer" class="modal-footer">
+							<button type="button" class="btn btn-default"
+								data-dismiss="modal">关闭</button>
+							<button id="sub01" type="submit" class="btn btn-primary">保存修改</button>
+							<a id="sub02" href="/employee/del?empId=" class="btn btn-warning">删除员工</a>
+						</div>
+
+					</form>
+				</div>
+			</div>
+		</div>
+
+
+		<!--add Modal -->
+		<div class="modal fade" id="myModal2" tabindex="-1" role="dialog"
+			aria-labelledby="myModalLabel">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+
+					<form action="/employee/add" method="post" class="form-inline">
+						<input type="hidden" id="inpage1" name="page" /> <input
+							type="hidden" id="inkey1" name="key" />
+
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal"
+								aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+							</button>
+							<h4 class="modal-title" id="myModalLabel1">添加员工</h4>
+						</div>
+						<div class="modal-body">
+							<table class="table">
+								<tr>
+									<td><div class="form-group">
+											<label>姓名</label> <input id="name1" type="text"
+												class="form-control" name="employeeName" placeholder="Name"
+												required="required" />
+										</div></td>
+									<td><div class="form-group">
+											<label>性别&ensp;&ensp;&ensp;&ensp;</label><input id="sex3"
+												type="radio" name="employeeSex" value="男" checked="checked" />男&ensp;&ensp;&ensp;<input
+												id="sex4" type="radio" name="employeeSex" value="女" />女
+										</div></td>
+								</tr>
+								<tr>
+									<td><div class="form-group">
+											<label>编号</label> <input id="code1" type="text"
+												class="form-control" name="employeeCode" placeholder="Code"
+												required="required" />
+										</div></td>
+									<td><div class="form-group">
+											<label>部门</label> <select id="branch1" class="form-control"
+												name="employeeBranch">
+												<option>市场部</option>
+												<option>采购部</option>
+												<option>维修部</option>
+												<option>人事部</option>
+												<option>财务部</option>
+											</select>
+										</div></td>
+								</tr>
+								<tr>
+									<td><div class="form-group">
+											<label>电话</label> <input id="phone1" type="tel"
+												class="form-control" name="employeePhone"
+												placeholder="Phone" required="required" />
+										</div></td>
+									<td><div class="form-group">
+											<label>邮箱</label> <input id="email1" type="email"
+												class="form-control" name="employeeEmail"
+												placeholder="Email" required="required" />
+										</div></td>
+								</tr>
+								<tr>
+									<td><div class="form-group">
+											<label>出生日期</label> <input id="birth1" type="date"
+												class="form-control" name="employeeBirth" />
+										</div></td>
+									<td>
+										<div class="form-group">
+											<label>通讯地址</label> <input id="address1" type="text"
+												class="form-control" name="employeeAddress"
+												placeholder="Postal address" />
+										</div>
+									</td>
+								</tr>
+								<tr>
+									<td>
+										<div class="form-group">
+											<label>是否在职&ensp;&ensp;</label> <input id="onjob1"
+												type="checkbox" name="employeeOnJop" value="1"
+												checked="checked" />
+										</div>
+									</td>
+									<td></td>
+								</tr>
+							</table>
+
+						</div>
+						<div id="footer" class="modal-footer">
+							<button type="button" class="btn btn-default"
+								data-dismiss="modal">关闭</button>
+							<button id="sub03" type="submit" class="btn btn-primary">添加</button>
+						</div>
+
+					</form>
+				</div>
+			</div>
+		</div>
+
+
+		<aside th:replace="common/starter :: aside"></aside>
+		<footer th:replace="common/starter :: footer"></footer>
+		<div class="control-sidebar-bg"></div>
+		<script th:replace="common/starter :: script"></script>
+
+
+
+		<script th:inline="javascript">
+		/*<![CDATA[*/
+			
+			var baseUrl = window.location.href;
+			$(function() {
+				var start = /*[[${message.data.startPage}]]*/
+				var end = /*[[${message.data.endPage}]]*/
+			    var page1 = /*[[${message.data.paging}]]*/
+				var count = /*[[${message.data.pageCount}]]*/
+				var add = /*[[${#httpServletRequest.getParameter('add')}]]*/
+				var update = /*[[${#httpServletRequest.getParameter('update')}]]*/
+				var del = /*[[${#httpServletRequest.getParameter('del')}]]*/
+				
+				if("success" == add)
+				{
+					layui.use('layer', function(){
+		            	 var layer = layui.layer;
+		            	 layer.msg('已成功添加一名员工');
+		            });
+				}else if("fail" == add)
+				{
+					layui.use('layer', function(){
+		            	 var layer = layui.layer;
+		            	 layer.msg('添加失败');
+		            });
+				}
+				
+				if("success" == update)
+				{
+					layui.use('layer', function(){
+		            	 var layer = layui.layer;
+		            	 layer.msg('修改成功');
+		            });
+				}else if("fail" == update)
+				{
+					layui.use('layer', function(){
+		            	 var layer = layui.layer;
+		            	 layer.msg('修改失败');
+		            });
+				}
+				
+				if("success" == del)
+				{
+					layui.use('layer', function(){
+		            	 var layer = layui.layer;
+		            	 layer.msg('删除成功');
+		            });
+				}else if("fail" == del)
+				{
+					layui.use('layer', function(){
+		            	 var layer = layui.layer;
+		            	 layer.msg('删除失败');
+		            });
+				}
+				/** 页码展示 */
+				function showPaging(){
+					$("#page-ul").append('<li><span id="previous" aria-label="Previous" style="cursor: pointer;"> <span aria-hidden="true">&laquo;</span> </span></li>');
+					while (parseInt(end) >= parseInt(start))
+					{
+						$("#page-ul").append('<li><a href="#" >'+start+'</a></li>');
+						if(start == page1)
+							$("#page-ul li:last-child").addClass("active");
+						start = start + 1;
+					}
+					$("#page-ul").append('<li><span id="next" aria-label="Next" style="cursor: pointer;"> <span aria-hidden="true">&raquo; </span></span></li>');
+				}
+				showPaging();
+				/** 控制页码显示是否访问 */
+				$("#page-ul li a").click(function() {
+					$("#page-ul li").removeClass("active")
+					$(this).addClass("active")
+				})
+				/** 点击页码跳转 */
+				$("#page-ul li a").click(function() {
+					var key = $("#key").val();
+							var page = $(this).html();
+							window.location.href = baseUrl.substring(0, baseUrl
+									.indexOf(""))
+									+ "/employee/query-list?page=" + page + "&key=" + key; 
+						})
+				/** 上一页 */
+				$("#previous").click(function() {
+					var key = $("#key").val();
+							if (page1 > 1){
+								page1 = page1 - 1;
+								window.location.href = baseUrl.substring(0, baseUrl
+										.indexOf(""))
+										+ "/employee/query-list?page=" + page1 + "&key=" + key; 
+							}
+						})
+				/** 下一页 */
+				$("#next").click(function() {
+					
+					var key = $("#key").val();
+						if(parseInt(count) > parseInt(page1)){
+							page1 = page1 + 1;
+							window.location.href = baseUrl.substring(0, baseUrl
+									.indexOf(""))
+									+ "/employee/query-list?page=" + page1 + "&key=" + key;  
+							}
+						})
+				/** 选择跳转第几页 */
+				$("#page").change(function(){
+					var page = $("#page").val();
+					var key = $("#key").val();
+					if(parseInt(page) > 0){
+						if(parseInt(count) >= parseInt(page)){
+							window.location.href = baseUrl.substring(0, baseUrl
+									.indexOf(""))
+									+ "/employee/query-list?page=" + page + "&key=" + key; 
+						    }
+					    }
+				    })
+				    
+				$("#search01").click(function(){
+					var key = $("#key").val();
+					window.location.href = baseUrl.substring(0, baseUrl
+							.indexOf(""))
+							+ "/employee/query-list?key=" + key;
+				})
+				
+				$("#li01").addClass("active menu-open");
+				$("#li01 ul li:first").addClass("active");
+				
+				/** 添加员工操作 */
+				$("#addemp").click(function(){
+					var key = $("#key").val();
+					$("#inpage1").val(page1)
+					$("#inkey1").val(key)
+				})
+				
+				/** 修改员工操作 */
+				$("table tbody tr").click(function(){
+            		var key = $("#key").val();
+            		var empId = $(this).attr("tabindex");
+            		$("#myModal form").attr("action","/employee/update")
+            		$.ajax({
+						type : "POST",
+						url : "/employee/get",
+						data : "empId=" + empId,
+						dataType : "json",
+						success : function(msg) {
+							var data = msg.data;
+							$("#empId").val(data.employeeId)
+							$("#inpage").val(page1)
+							$("#inkey").val(key)
+							$("#name").val(data.employeeName)
+							if("女" == data.employeeSex)
+								$("#sex2").attr("checked", true);
+							else
+								$("#sex1").attr("checked", true);
+							$("#email").val(data.employeeEmail)
+							$("#phone").val(data.employeePhone)
+							$("#code").val(data.employeeCode)
+							$("#branch").val(data.employeeBranch)
+							$("#address").val(data.employeeAddress)
+							$("#birth").val(data.employeeBirth)
+							if("1" == data.employeeOnJop)
+								$("#onjob").attr("checked", true)
+							else
+								$("#onjob").attr("checked", false)
+							$("#sub02").attr("href",$("#sub02").attr("href")+data.employeeId+"&page="+page1+"&key="+key+"&code="+data.employeeCode)
+							$("#myModal").modal('show');
+						}
+					});
+            	})
+            	
+            	$("#code1").blur(function(){
+            		var code = $("#code1").val();
+            		$.ajax({
+						type : "POST",
+						url : "/employee/check",
+						data : "code=" + code,
+						dataType : "json",
+						success : function(msg) {
+							if("success" == msg.message) {
+								layui.use('layer', function(){
+					            	 var layer = layui.layer;
+					            	 layer.open({
+				            			  title: '编号验证',
+				            			  icon: 0,
+				            			  content: '该编号已经被使用'
+				            			}); 
+					            });
+							}
+						}
+					});
+            		
+            	})
+			});
+		/*]]>*/
+		</script>
+
+	</div>
+</body>
+
+</html>

@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="common/starter :: head">
+
+</head>
+<body class="hold-transition skin-blue sidebar-mini">
+	<div class="wrapper">
+		<header th:replace="common/starter :: header"></header>
+		<div class="content-wrapper">
+			<section class="content">
+				<div class="row">
+					<div class="col-xs-12">
+						<div class="box">
+							<div class="box-header">
+								<div class="col-md-9">
+									<h3 class="box-title">会员信息</h3>
+								</div>
+								<div class="col-md-3">
+									<div class="input-group">
+										<input type="text" id="key" class="form-control"
+											placeholder="输入会员姓名、编号或电话" th:value="${key}" /> <span
+											class="input-group-btn">
+											<button type="submit" name="search" class="btn btn-flat"
+												id="search01">
+												<i class="fa fa-search"></i>
+											</button>
+										</span>
+									</div>
+								</div>
+							</div>
+							<!-- /.box-header -->
+							<div class="box-body">
+								<table id="table01" class="table table-bordered table-hover table-striped">
+									<thead>
+										<tr>
+											<th>姓名</th>
+											<th>编号</th>
+											<th>性别</th>
+											<th>电话</th>
+											<th>积分</th>
+											<th>入会时间</th>
+										</tr>
+									</thead>
+									<tbody>
+
+										<tr th:each="member,userStat : ${message.data.content}"
+											th:tabindex="${member.memberId}">
+											<td th:text="${member.memberName}"></td>
+											<td th:text="${member.memberSex}"></td>
+											<td th:text="${member.memberCode}"></td>
+											<td th:text="${member.memberPhone}"></td>
+											<td th:text="${member.memberIntegral}"></td>
+											<td th:text="${member.memberCreateDate}"></td>
+										</tr>
+
+									</tbody>
+								</table>
+								<nav aria-label="Page navigation">
+									<div class="row">
+										<div class="col-md-2">
+											<ul class="pagination">
+												<li><button id="addMember" type="button"
+														class="btn btn-primary" data-toggle="modal"
+														data-target="#myModal">添加会员</button></li>
+											</ul>
+										</div>
+										<div class="col-md-8">
+											<ul class="pagination navbar-right" id="page-ul">
+
+											</ul>
+										</div>
+										<div class="col-md-2">
+											<ul class="pagination">
+												<li><input type="text" id="page"
+													style="width: 45px; height: 32px;" /></li>
+												<li th:text=" 共+${message.data.pageCount}+页">共15页</li>
+											</ul>
+										</div>
+									</div>
+								</nav>
+
+							</div>
+							<!-- /.box-body -->
+						</div>
+
+					</div>
+					<!-- /.col -->
+				</div>
+				<!-- /.row -->
+			</section>
+			<!-- /.content -->
+			<!-- /.content -->
+		</div>
+		<!-- /.content-wrapper -->
+
+
+		<!--add Modal -->
+		<div class="modal fade" id="myModal" tabindex="-1" role="dialog"
+			aria-labelledby="myModalLabel">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+
+					<form action="/member/add" method="post" class="form-inline">
+						<input type="hidden" id="inpage" name="page" /> <input
+							type="hidden" id="inkey" name="key" />
+
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal"
+								aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+							</button>
+							<h4 class="modal-title" id="myModalLabel">添加会员</h4>
+						</div>
+						<div class="modal-body">
+							<table class="table">
+								<tr>
+									<td><div class="form-group">
+											<label>姓名</label> <input type="text" class="form-control"
+												name="memberName" placeholder="Name" required="required" />
+										</div></td>
+									<td><div class="form-group">
+											<label>性别&ensp;&ensp;&ensp;&ensp;</label><input type="radio"
+												name="memberSex" value="男" checked="checked" />男&ensp;&ensp;&ensp;<input
+												type="radio" name="memberSex" value="女" />女
+										</div></td>
+								</tr>
+								<tr>
+									<td><div class="form-group">
+											<label>编号</label> <input type="text" id="code1" class="form-control"
+												name="memberCode" placeholder="Code" required="required" />
+										</div></td>
+									<td><div class="form-group">
+											<label>电话</label> <input type="tel" id="phone1" class="form-control"
+												name="memberPhone" placeholder="Phone" required="required" />
+										</div></td>
+								</tr>
+								<tr>
+									<td><div class="form-group">
+											<label>积分</label> <input type="number" class="form-control"
+												name="memberIntegral" placeholder="Integral"
+												required="required" />
+										</div></td>
+									<td><div class="form-group">
+											<label>时间</label> <input type="date" class="form-control"
+												name="memberCreateDate" />
+										</div></td>
+								</tr>
+							</table>
+
+						</div>
+						<div id="footer" class="modal-footer">
+							<button type="button" class="btn btn-default"
+								data-dismiss="modal">关闭</button>
+							<button type="submit" class="btn btn-primary">添加</button>
+						</div>
+
+					</form>
+				</div>
+			</div>
+		</div>
+
+
+		<!--add Modal -->
+		<div class="modal fade" id="myModal2" tabindex="-1" role="dialog"
+			aria-labelledby="myModalLabel">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+
+					<form action="/member/update" method="post" class="form-inline">
+						<input type="hidden" id="memberId" name="memberId" /> <input
+							type="hidden" id="inpage1" name="page" /> <input type="hidden"
+							id="inkey1" name="key" />
+
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal"
+								aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+							</button>
+							<h4 class="modal-title" id="myModalLabel1">修改会员信息</h4>
+						</div>
+						<div class="modal-body">
+							<table class="table">
+								<tr>
+									<td><div class="form-group">
+											<label>姓名</label> <input type="text" id="name"
+												class="form-control" name="memberName" placeholder="Name"
+												required="required" />
+										</div></td>
+									<td><div class="form-group">
+											<label>性别&ensp;&ensp;&ensp;&ensp;</label><input id="sex1"
+												type="radio" name="memberSex" value="男" checked="checked" />男&ensp;&ensp;&ensp;<input
+												id="sex2" type="radio" name="memberSex" value="女" />女
+										</div></td>
+								</tr>
+								<tr>
+									<td><div class="form-group">
+											<label>编号</label> <input type="text" id="code"
+												class="form-control" name="memberCode" placeholder="Code"
+												required="required" readonly="readonly" />
+										</div></td>
+									<td><div class="form-group">
+											<label>电话</label> <input type="tel" id="phone"
+												class="form-control" name="memberPhone" placeholder="Phone"
+												required="required" />
+										</div></td>
+								</tr>
+								<tr>
+									<td><div class="form-group">
+											<label>积分</label> <input id="integral" type="number"
+												class="form-control" name="memberIntegral"
+												placeholder="Integral" required="required" readonly="readonly" />
+										</div></td>
+									<td><div class="form-group">
+											<label>时间</label> <input id="createDate" type="date"
+												class="form-control" name="memberCreateDate" />
+										</div></td>
+								</tr>
+							</table>
+
+						</div>
+						<div id="footer" class="modal-footer">
+							<button type="button" class="btn btn-default"
+								data-dismiss="modal">关闭</button>
+							<button id="sub01" type="submit" class="btn btn-primary">保存修改</button>
+							<a id="sub02" class="btn btn-danger"
+								href="/member/del?memberId=">删除会员</a>
+						</div>
+
+					</form>
+				</div>
+			</div>
+		</div>
+
+
+		<aside th:replace="common/starter :: aside"></aside>
+		<footer th:replace="common/starter :: footer"></footer>
+		<div class="control-sidebar-bg"></div>
+		<script th:replace="common/starter :: script"></script>
+
+
+
+		<script th:inline="javascript">
+		/*<![CDATA[*/
+			
+			var baseUrl = window.location.href;
+			$(function() {
+				var start = /*[[${message.data.startPage}]]*/
+				var end = /*[[${message.data.endPage}]]*/
+			    var page1 = /*[[${message.data.paging}]]*/
+				var count = /*[[${message.data.pageCount}]]*/
+				var add = /*[[${#httpServletRequest.getParameter('add')}]]*/
+				var update = /*[[${#httpServletRequest.getParameter('update')}]]*/
+				var del = /*[[${#httpServletRequest.getParameter('del')}]]*/
+				
+				if("success" == add)
+				{
+					layui.use('layer', function(){
+		            	 var layer = layui.layer;
+		            	 layer.msg('添加成功');
+		            });
+				}else if("fail" == add)
+				{
+					layui.use('layer', function(){
+		            	 var layer = layui.layer;
+		            	 layer.msg('添加失败');
+		            });
+				}
+				
+				if("success" == update)
+				{
+					layui.use('layer', function(){
+		            	 var layer = layui.layer;
+		            	 layer.msg('修改成功');
+		            });
+				}else if("fail" == update)
+				{
+					layui.use('layer', function(){
+		            	 var layer = layui.layer;
+		            	 layer.msg('修改失败');
+		            });
+				}
+				
+				if("success" == del)
+				{
+					layui.use('layer', function(){
+		            	 var layer = layui.layer;
+		            	 layer.msg('删除成功');
+		            });
+				}else if("fail" == del)
+				{
+					layui.use('layer', function(){
+		            	 var layer = layui.layer;
+		            	 layer.msg('删除失败');
+		            });
+				}
+				/** 页码展示 */
+				function showPaging(){
+					$("#page-ul").append('<li><span id="previous" aria-label="Previous" style="cursor: pointer;"> <span aria-hidden="true">&laquo;</span> </span></li>');
+					while (parseInt(end) >= parseInt(start))
+					{
+						$("#page-ul").append('<li><a href="#" >'+start+'</a></li>');
+						if(start == page1)
+							$("#page-ul li:last-child").addClass("active");
+						start = start + 1;
+					}
+					$("#page-ul").append('<li><span id="next" aria-label="Next" style="cursor: pointer;"> <span aria-hidden="true">&raquo; </span></span></li>');
+				}
+				showPaging();
+				/** 控制页码显示是否访问 */
+				$("#page-ul li a").click(function() {
+					$("#page-ul li").removeClass("active")
+					$(this).addClass("active")
+				})
+				/** 点击页码跳转 */
+				$("#page-ul li a").click(function() {
+					var key = $("#key").val();
+							var page = $(this).html();
+							window.location.href = baseUrl.substring(0, baseUrl
+									.indexOf(""))
+									+ "/member/getList?page=" + page + "&key=" + key; 
+						})
+				/** 上一页 */
+				$("#previous").click(function() {
+					var key = $("#key").val();
+							if (page1 > 1){
+								page1 = page1 - 1;
+								window.location.href = baseUrl.substring(0, baseUrl
+										.indexOf(""))
+										+ "/member/getList?page=" + page1 + "&key=" + key; 
+							}
+						})
+				/** 下一页 */
+				$("#next").click(function() {
+					
+					var key = $("#key").val();
+						if(parseInt(count) > parseInt(page1)){
+							page1 = page1 + 1;
+							window.location.href = baseUrl.substring(0, baseUrl
+									.indexOf(""))
+									+ "/member/getList?page=" + page1 + "&key=" + key;  
+							}
+						})
+				/** 选择跳转第几页 */
+				$("#page").change(function(){
+					var page = $("#page").val();
+					var key = $("#key").val();
+					if(parseInt(page) > 0){
+						if(parseInt(count) >= parseInt(page)){
+							window.location.href = baseUrl.substring(0, baseUrl
+									.indexOf(""))
+									+ "/member/getList?page=" + page + "&key=" + key; 
+						    }
+					    }
+				    })
+				    
+				$("#search01").click(function(){
+					var key = $("#key").val();
+					window.location.href = baseUrl.substring(0, baseUrl
+							.indexOf(""))
+							+ "/member/getList?key=" + key;
+				})
+				
+				$("#li03").addClass("active menu-open");
+				$("#li03 ul li:first").addClass("active");
+				
+				/** 添加会员操作 */
+				$("#addMember").click(function(){
+					var key = $("#key").val();
+					$("#inpage").val(page1)
+					$("#inkey").val(key)
+				})
+				
+				/** 修改会员操作 */
+				$("table tbody tr").click(function(){
+            		var key = $("#key").val();
+            		var memberId = $(this).attr("tabindex");
+            		$.ajax({
+						type : "POST",
+						url : "/member/get",
+						data : "memberId=" + memberId,
+						dataType : "json",
+						success : function(msg) {
+							var data = msg.data;
+							$("#memberId").val(data.memberId)
+							$("#inpage1").val(page1)
+							$("#inkey1").val(key)
+							$("#name").val(data.memberName)
+							if("女" == data.memberSex)
+								$("#sex2").attr("checked", true);
+							else
+								$("#sex1").attr("checked", true);
+							$("#code").val(data.memberCode)
+							$("#phone").val(data.memberPhone)
+							$("#integral").val(data.memberIntegral)
+							$("#createDate").val(data.memberCreateDate)
+							$("#sub02").attr("href",$("#sub02").attr("href")+data.memberId+"&page="+page1+"&key="+key)
+							$("#myModal2").modal('show');
+						}
+					});
+            	})
+            	
+            	$("#code1").blur(function(){
+            		var code = $("#code1").val();
+            		$.ajax({
+						type : "POST",
+						url : "/member/getByCode",
+						data : "code=" + code,
+						dataType : "json",
+						success : function(msg) {
+							if("success" == msg.message) {
+								layui.use('layer', function(){
+					            	 var layer = layui.layer;
+					            	 layer.open({
+				            			  title: '编号验证',
+				            			  icon: 0,
+				            			  content: '该编号已经被使用'
+				            			}); 
+					            });
+							}
+						}
+					});
+            	})
+            	$("#phone1").blur(function(){
+            		var phone = $("#phone1").val();
+            		$.ajax({
+						type : "POST",
+						url : "/member/getByPhone",
+						data : "phone=" + phone,
+						dataType : "json",
+						success : function(msg) {
+							if("success" == msg.message) {
+								layui.use('layer', function(){
+					            	 var layer = layui.layer;
+					            	 layer.open({
+				            			  title: '手机号验证',
+				            			  icon: 0,
+				            			  content: '该手机号已经被使用'
+				            			}); 
+					            });
+							}
+						}
+					});
+            	})
+			});
+		/*]]>*/
+		</script>
+
+	</div>
+</body>
+
+</html>
